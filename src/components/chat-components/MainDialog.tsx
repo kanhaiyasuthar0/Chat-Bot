@@ -21,7 +21,7 @@ export default function MainDialog() {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          className="p-2 text-black rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="p-2 text-white bg-[#212121] rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
           variant="outline"
         >
           Language - {language}

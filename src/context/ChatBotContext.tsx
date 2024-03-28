@@ -18,6 +18,11 @@ interface AppContextType {
   bot: string;
   setBot: (str: string) => void;
   user: User | null;
+  loader: {
+    page: string | boolean;
+    component: string | boolean;
+  };
+  callLoader: (type: string, status: string | boolean) => void;
 }
 
 interface User {
@@ -52,11 +57,22 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [bot, setBot] = useState("");
   const navigate = useNavigate();
 
+  //loaders
+  const [loader, setLoader] = useState({
+    page: false,
+    component: false,
+  });
+
+  const callLoader = (type: string, status: string | boolean) => {
+    setLoader({ ...loader, [type]: status });
+  };
+
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
   useEffect(() => {
+    // callLoader("page", true);
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       console.log("🚀 ~ unsubscribe ~ firebaseUser:", firebaseUser);
       if (firebaseUser) {
@@ -71,9 +87,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             email: firebaseUser.email || "",
             photoURL: firebaseUser.photoURL || "",
           });
+          //   callLoader("page", false);
           navigate("/chat"); // Navigate to the chat page
         }
       } else {
+        // callLoader("page", false);
         navigate("/login"); // Navigate to the chat page
         // User is signed out
         setUser(null);
@@ -91,6 +109,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     bot,
     setBot,
     user,
+    callLoader,
+    loader,
   };
 
   return (

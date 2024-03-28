@@ -15,7 +15,7 @@ export default function BotSelection() {
 
   return (
     <Select value={bot} onValueChange={(newBot) => setBot(newBot)}>
-      <SelectTrigger className="w-[180px] text-black">
+      <SelectTrigger className="w-[180px] text-white bg-[#212121] border-bg-[#212121] outline-[#212121]">
         <SelectValue placeholder="Select a bot" />
       </SelectTrigger>
       <SelectContent>

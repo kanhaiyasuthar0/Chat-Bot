@@ -18,7 +18,7 @@ export default function MainSelect({
 }) {
   return (
     <Select value={language} onValueChange={(newLang) => setLanguage(newLang)}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[180px] text-white bg-[#212121] border-bg-[#212121] outline-[#212121]">
         <SelectValue placeholder="Select a langauge" />
       </SelectTrigger>
       <SelectContent>

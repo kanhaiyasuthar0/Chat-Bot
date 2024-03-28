@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { auth, db } from "./firebaseConfig";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 const provider = new GoogleAuthProvider();
@@ -25,9 +25,23 @@ export const signInWithGoogle = async () => {
         photoURL: user.photoURL,
       });
     }
-
     console.log("User document written with ID: ", user.uid);
+    return true;
   } catch (error) {
     console.error("Error adding document: ", error);
+    return false;
   }
+};
+
+export const handleSignOut = () => {
+  signOut(auth)
+    .then(() => {
+      // Sign-out successful.
+      console.log("Sign-out successful");
+      // Optionally, redirect the user or reset app state here
+    })
+    .catch((error) => {
+      // An error happened.
+      console.error("Sign-out error:", error);
+    });
 };

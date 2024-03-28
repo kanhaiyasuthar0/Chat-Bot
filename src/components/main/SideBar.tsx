@@ -1,11 +1,14 @@
+import { handleSignOut } from "@/configs/firebaseService";
+import { Button } from "../ui/button";
+
 export default function Sidebar() {
   return (
-    <aside className="w-64 bg-gray-800 border-r border-gray-700">
+    <aside className="w-64 bg-[#171717] border-r border-[#171717]">
       <nav className="p-4">
         <ul className="space-y-2">
           <li>
             <a
-              className="flex items-center py-2 px-4 bg-gray-700 rounded-md text-white hover:bg-gray-600 transition duration-150 ease-in-out"
+              className="flex items-center py-2 px-4 border-[#171717] rounded-md text-white hover:bg-gray-600 transition duration-150 ease-in-out"
               href="#"
             >
               <svg
@@ -27,7 +30,7 @@ export default function Sidebar() {
           </li>
           <li>
             <a
-              className="flex items-center py-2 px-4 bg-gray-700 rounded-md text-white hover:bg-gray-600 transition duration-150 ease-in-out"
+              className="flex items-center py-2 px-4 border-[#171717]rounded-md text-white hover:bg-gray-600 transition duration-150 ease-in-out"
               href="#"
             >
               <svg
@@ -48,6 +51,13 @@ export default function Sidebar() {
             </a>
           </li>
         </ul>
+
+        <Button
+          onClick={handleSignOut}
+          className="p-2 w-full mt-5 text-left border-[#171717] rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+        >
+          Sign Out
+        </Button>
       </nav>
     </aside>
   );
