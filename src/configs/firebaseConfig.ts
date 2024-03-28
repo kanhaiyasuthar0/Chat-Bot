@@ -8,12 +8,12 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB5akIJj-3104FQUvYQErqpQsY43SpiZKw",
-  authDomain: "digital-green-chat-bot.firebaseapp.com",
-  projectId: "digital-green-chat-bot",
-  storageBucket: "digital-green-chat-bot.appspot.com",
-  messagingSenderId: "676928946744",
-  appId: "1:676928946744:web:f2910b626042dde82a1ccd",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
