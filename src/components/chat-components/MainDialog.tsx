@@ -57,7 +57,12 @@ export default function MainDialog() {
           </div>
         </div> */}
 
-        <MainSelect setLanguage={setLanguage} language={language} />
+        <MainSelect
+          setter={setLanguage}
+          state={language}
+          options={[{ label: "some", value: "" }]}
+          placeholder={"Select the language"}
+        />
         <DialogFooter>
           <DialogClose>
             <Button type="submit">Save changes</Button>

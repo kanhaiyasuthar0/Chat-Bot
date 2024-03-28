@@ -10,21 +10,27 @@ import {
 // import { useState } from "react";
 
 export default function MainSelect({
-  language,
-  setLanguage,
+  state,
+  setter,
+  options,
+  placeholder,
 }: {
-  language: string;
-  setLanguage: (string: string) => void;
+  state: string;
+  placeholder: string;
+  setter: (string: string) => void;
+  options: { label: string; value: string }[];
 }) {
   return (
-    <Select value={language} onValueChange={(newLang) => setLanguage(newLang)}>
+    <Select value={state} onValueChange={(newState) => setter(newState)}>
       <SelectTrigger className="w-[180px] text-white bg-[#212121] border-bg-[#212121] outline-[#212121]">
-        <SelectValue placeholder="Select a langauge" />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="en">English</SelectItem>
-          <SelectItem value="hi">Hindi</SelectItem>
+          {options?.map((option) => {
+            return <SelectItem value={option.value}>{option.label}</SelectItem>;
+          })}
+          {/* <SelectItem value="en">English</SelectItem> */}
         </SelectGroup>
       </SelectContent>
     </Select>

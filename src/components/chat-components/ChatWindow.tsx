@@ -8,6 +8,7 @@ import ResponseFormatter from "./ResponseFormatter";
 import ComponentLoader from "../loaders/ComponentLoader";
 import BotSelection from "./BotSelection";
 import Selector from "./Selector";
+import CropSelector from "./CropSelector";
 
 // Adjusting the IMessage interface to encapsulate a chat exchange
 interface IChatExchange {
@@ -28,7 +29,7 @@ const ChatComponent: React.FC = () => {
   const [chatExchanges, setChatExchanges] = useState<IChatExchange[]>([]);
 
   const [inputText, setInputText] = useState("");
-  const { callLoader, loader, user } = useAppContext();
+  const { callLoader, loader, user, crop, language, bot } = useAppContext();
 
   const bottomRef = useRef<null | HTMLDivElement>(null);
   // const handleSendMessage = (event: FormEvent<HTMLFormElement>) => {
@@ -63,6 +64,7 @@ const ChatComponent: React.FC = () => {
   // };
 
   async function getResponse(inputText: string) {
+    console.log(crop, language, bot, " crop, language, bot");
     const newExchange: IChatExchange = {
       id: chatExchanges.length + 1,
       query: inputText,
@@ -74,6 +76,8 @@ const ChatComponent: React.FC = () => {
     try {
       const response = await axios.post("https://your-backend-api.com/query", {
         query: inputText, // Send query
+        chain: true,
+        filters: {},
       });
       console.log("🚀 ~ getResponse ~ response:", response);
 
@@ -175,6 +179,7 @@ const ChatComponent: React.FC = () => {
         {/* Assuming you have state and handlers for these select elements */}
         <BotSelection />
         <Selector />
+        <CropSelector />
       </div>
 
       {/* Main content area */}

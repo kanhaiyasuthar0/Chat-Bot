@@ -1,7 +1,10 @@
 import { handleSignOut } from "@/configs/firebaseService";
 import { Button } from "../ui/button";
+import { useAppContext } from "@/context/ChatBotContext";
 
 export default function Sidebar() {
+  const { resetter } = useAppContext();
+
   return (
     <aside className="w-64 bg-[#171717] border-r border-[#171717]">
       <nav className="p-4">
@@ -53,7 +56,10 @@ export default function Sidebar() {
         </ul>
 
         <Button
-          onClick={handleSignOut}
+          onClick={() => {
+            resetter();
+            handleSignOut();
+          }}
           className="p-2 w-full mt-5 text-left border-[#171717] rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
         >
           Sign Out

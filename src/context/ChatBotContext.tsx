@@ -23,6 +23,9 @@ interface AppContextType {
     component: string | boolean;
   };
   callLoader: (type: string, status: string | boolean) => void;
+  crop: string;
+  setCrop: (input: string) => void;
+  resetter: () => void;
 }
 
 interface User {
@@ -54,6 +57,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [theme, setTheme] = useState("light");
   const [language, setLanguage] = useState("en");
+  const [crop, setCrop] = useState("");
   const [bot, setBot] = useState("");
   const navigate = useNavigate();
 
@@ -69,6 +73,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
+
+  const resetter = () => {
+    setBot("");
+    setLanguage("en");
+    setCrop("");
   };
 
   useEffect(() => {
@@ -111,6 +121,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     user,
     callLoader,
     loader,
+    crop,
+    setCrop,
+    resetter,
   };
 
   return (
