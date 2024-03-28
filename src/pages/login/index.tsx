@@ -1,5 +1,5 @@
 import GoogleSignIn from "@/components/google-auth/GoogleSignIn";
-import React from "react";
+// import React from "react";
 
 const Login = () => {
   return <GoogleSignIn />;

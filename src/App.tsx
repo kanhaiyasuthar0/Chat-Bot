@@ -1,5 +1,4 @@
 import "./App.css";
-import Sidebar from "./components/main/SideBar";
 
 import ChatMainPage from "./pages/chat";
 import { Routes, Route } from "react-router-dom";
