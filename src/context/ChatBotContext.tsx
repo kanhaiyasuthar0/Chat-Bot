@@ -74,6 +74,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           navigate("/chat"); // Navigate to the chat page
         }
       } else {
+        navigate("/login"); // Navigate to the chat page
         // User is signed out
         setUser(null);
       }
