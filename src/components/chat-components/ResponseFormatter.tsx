@@ -67,7 +67,7 @@ const ResponseFormatter = ({
             {exchange?.follow_up_questions.map((question, index) => (
               <Button
                 type="submit"
-                className="px-4 py-2 bg-[#040404] hover:bg-[#1a1a1a] border border-white outline-none text-white rounded-full disabled:bg-[#171717] focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                className="px-4 py-2 bg-[#1a1a1a] hover:bg-[#1a1a1a] border border-white outline-none text-white rounded disabled:bg-[#171717] focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
                 //   disabled={!inputText.trim()}
                 onClick={() => getResponse(question.trim())}
               >
