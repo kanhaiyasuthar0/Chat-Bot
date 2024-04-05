@@ -1,18 +1,31 @@
 import { handleSignOut } from "@/configs/firebaseService";
 import { Button } from "../ui/button";
 import { useAppContext } from "@/context/ChatBotContext";
+import BotSelection from "../chat-components/BotSelection";
+import Selector from "../chat-components/Selector";
+import CropSelector from "../chat-components/CropSelector";
+import { Link } from "react-router-dom";
+import GptBotSelector from "../chat-components/GptBotSelector";
 
 export default function Sidebar() {
   const { resetter } = useAppContext();
 
   return (
     <aside className="w-64 bg-[#171717] border-r border-[#171717]">
-      <nav className="p-4">
+      <nav className="p-4 flex flex-col justify-between h-full">
+        <div className="flex flex-col align-middle justify-start gap-5 p-2 w-full min-w-[200px]">
+          {/* Assuming you have state and handlers for these select elements */}
+          {/* <BotSelection /> */}
+          <GptBotSelector />
+          {/* <Selector />
+          <CropSelector /> */}
+        </div>
+
         <ul className="space-y-2">
           <li>
-            <a
+            <Link
               className="flex items-center py-2 px-4 border-[#171717] rounded-md text-white hover:bg-gray-600 transition duration-150 ease-in-out"
-              href="#"
+              to={"/dashboard"}
             >
               <svg
                 className="w-5 h-5 mr-2"
@@ -29,12 +42,12 @@ export default function Sidebar() {
                 ></path>
               </svg>
               Dashboard
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               className="flex items-center py-2 px-4 border-[#171717]rounded-md text-white hover:bg-gray-600 transition duration-150 ease-in-out"
-              href="#"
+              to={"/chat"}
             >
               <svg
                 className="w-5 h-5 mr-2"
@@ -51,19 +64,18 @@ export default function Sidebar() {
                 ></path>
               </svg>
               Chat
-            </a>
+            </Link>
           </li>
+          <Button
+            onClick={() => {
+              resetter();
+              handleSignOut();
+            }}
+            className="p-2 w-full mt-5 text-left border-[#171717] rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Sign Out
+          </Button>
         </ul>
-
-        <Button
-          onClick={() => {
-            resetter();
-            handleSignOut();
-          }}
-          className="p-2 w-full mt-5 text-left border-[#171717] rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-        >
-          Sign Out
-        </Button>
       </nav>
     </aside>
   );

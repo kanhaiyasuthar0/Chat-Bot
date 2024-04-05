@@ -57,8 +57,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [theme, setTheme] = useState("light");
   const [language, setLanguage] = useState("en");
-  const [crop, setCrop] = useState("");
-  const [bot, setBot] = useState("");
+  const [crop, setCrop] = useState("wheat");
+  const [bot, setBot] = useState("vistar_bot");
   const navigate = useNavigate();
 
   //loaders
@@ -82,33 +82,40 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    // callLoader("page", true);
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      console.log("🚀 ~ unsubscribe ~ firebaseUser:", firebaseUser);
-      if (firebaseUser) {
-        // User is signed in, see docs for a list of available properties
-        const userRef = doc(db, "users", firebaseUser.uid);
-        const userSnap = await getDoc(userRef);
+    try {
+      // if (!user) {
+      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        console.log("🚀 ~ unsubscribe ~ firebaseUser:", firebaseUser);
+        // callLoader("page", true);
+        if (firebaseUser) {
+          // User is signed in, see docs for a list of available properties
+          const userRef = doc(db, "users", firebaseUser.uid);
+          const userSnap = await getDoc(userRef);
 
-        if (userSnap.exists()) {
-          setUser({
-            uid: firebaseUser.uid,
-            name: firebaseUser.displayName || "",
-            email: firebaseUser.email || "",
-            photoURL: firebaseUser.photoURL || "",
-          });
-          //   callLoader("page", false);
-          navigate("/chat"); // Navigate to the chat page
+          if (userSnap.exists()) {
+            setUser({
+              uid: firebaseUser.uid,
+              name: firebaseUser.displayName || "",
+              email: firebaseUser.email || "",
+              photoURL: firebaseUser.photoURL || "",
+            });
+            console.log("inside context123");
+            // callLoader("page", false);
+            navigate("/chat"); // Navigate to the chat page
+          }
+        } else {
+          callLoader("page", false);
+          navigate("/login"); // Navigate to the chat page
+          // User is signed out
+          setUser(null);
         }
-      } else {
-        // callLoader("page", false);
-        navigate("/login"); // Navigate to the chat page
-        // User is signed out
-        setUser(null);
-      }
-    });
-
-    return unsubscribe; // Cleanup subscription on unmount
+      });
+      return unsubscribe; // Cleanup subscription on unmount
+      // }
+    } catch (error) {
+      console.log(error);
+      callLoader("page", false);
+    }
   }, [navigate]);
 
   const contextValue = {
@@ -119,6 +126,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     bot,
     setBot,
     user,
+    setUser,
     callLoader,
     loader,
     crop,

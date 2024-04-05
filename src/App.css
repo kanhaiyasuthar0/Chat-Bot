@@ -1,0 +1,42 @@
+.list-item {
+  border: 1px solid #ccc; /* Adjust the border color as needed */
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 4px;
+  position: relative;
+  font-size: small;
+  width: 50%;
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+.list-item:hover {
+  background-color: #f0f0f047; /* Slightly change background color on hover */
+}
+.list-item svg {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  visibility: hidden; /* Hide SVG initially */
+}
+.list-item:hover svg {
+  visibility: visible; /* Show SVG on hover */
+}
+
+.MuiBox-root span {
+  font-family: Reddit Mono, monospace !important;
+}
+.main-input {
+  border: none !important;
+  outline: none !important; /* Add this line */
+}
+
+.main-input:active,
+.main-input:focus {
+  border: none !important;
+  outline: none !important; /* Add this line */
+}
+
+.focus-visible\:ring-offset-2:focus-visible {
+  /* tw-ring-offset-width: 0px !important; */
+  border: none !important;
+}

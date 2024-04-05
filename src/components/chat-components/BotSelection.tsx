@@ -20,13 +20,9 @@ export default function BotSelection() {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {/* <SelectLabel></SelectLabel> */}
           <SelectItem value="vistar_bot">Vistar Bot</SelectItem>
           <SelectItem value="bihar_bot">Bihar Bot</SelectItem>
           <SelectItem value="kenya_bot">Kenya Bot</SelectItem>
-          {/* <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem> */}
         </SelectGroup>
       </SelectContent>
     </Select>

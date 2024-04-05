@@ -6,10 +6,10 @@ import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ResponseFormatter from "./ResponseFormatter";
 import ComponentLoader from "../loaders/ComponentLoader";
-import BotSelection from "./BotSelection";
-import Selector from "./Selector";
-import CropSelector from "./CropSelector";
-
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { IoSend } from "react-icons/io5";
+import AssistComponent from "../generics/AssistComponent";
+import urlConstants from "@/utils/urlConstant";
 // Adjusting the IMessage interface to encapsulate a chat exchange
 interface IChatExchange {
   id: number;
@@ -27,41 +27,11 @@ interface IChatExchange {
 const ChatComponent: React.FC = () => {
   // const [messages, setMessages] = useState<IMessage[]>([]);
   const [chatExchanges, setChatExchanges] = useState<IChatExchange[]>([]);
-
+  const [readyForQuery, setReadyForQuery] = useState(false); // if false bot is not ready for next query
   const [inputText, setInputText] = useState("");
   const { callLoader, loader, user, crop, language, bot } = useAppContext();
 
   const bottomRef = useRef<null | HTMLDivElement>(null);
-  // const handleSendMessage = (event: FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   if (!inputText.trim()) return;
-
-  //   const newMessage: IMessage = {
-  //     id: messages.length + 1,
-  //     text: inputText,
-  //     sender: "user",
-  //   };
-  //   const newSystemMessage: IMessage = {
-  //     id: messages.length + 2,
-  //     text: `Sure ${inputText}`,
-  //     sender: "system",
-  //     loading: true,
-  //   };
-  //   setMessages([...messages, newMessage, newSystemMessage]);
-  //   setInputText(""); // Clear input after sending
-  // };
-
-  // const copyToClipboard = (text: string) => {
-  //   navigator.clipboard
-  //     .writeText(text)
-  //     .then(() => {
-  //       // Possibly show some feedback that the text has been copied.
-  //       console.log("Text copied to clipboard");
-  //     })
-  //     .catch((err) => {
-  //       console.error("Failed to copy text: ", err);
-  //     });
-  // };
 
   async function getResponse(inputText: string) {
     console.log(crop, language, bot, " crop, language, bot");
@@ -73,12 +43,28 @@ const ChatComponent: React.FC = () => {
 
     setChatExchanges([...chatExchanges, newExchange]);
 
+    const payload = {
+      query: inputText,
+      email_id: localStorage.getItem("userId"),
+      chain: true,
+      filters: {},
+    };
+
+    // Conditionally add `sub_category` if `crop` is defined and not empty
+    if (crop) {
+      payload.filters["sub_category"] = crop;
+    }
+
+    // Conditionally add `state` if `state` is defined and not empty
+    // if (state) {
+    //   payload.filters["state"] = state;
+    // }
+
     try {
-      const response = await axios.post("https://your-backend-api.com/query", {
-        query: inputText, // Send query
-        chain: true,
-        filters: {},
-      });
+      const response = await axios.post(
+        `${urlConstants.baseUrl}/ai/chat/chat_api/`,
+        payload
+      );
       console.log("🚀 ~ getResponse ~ response:", response);
 
       // Update the latest exchange with the response
@@ -90,18 +76,7 @@ const ChatComponent: React.FC = () => {
           const lastExchange = updatedExchanges.at(-1)!;
           updatedExchanges[updatedExchanges.length - 1] = {
             ...lastExchange,
-            response: {
-              youtube_url: "https://www.youtube.com/watch?v=oLc2P7Zrpqc",
-              query_response:
-                "Wheat blast is a serious fungal disease caused by Magnaporthe oryzae sub.sp. triticum that affects wheat crops. It can lead to significant yield losses ranging from 10 to 100% depending on various factors like genotype, planting time, rainfall, and disease severity. The disease is characterized by completely bleached wheat spikes with gray blast sporulation, lesions with white centers and reddish brown margins on leaves, and can infect all above-ground parts of the plant.",
-              condensed_question: "What can you tell me about wheat blast?",
-              follow_up_questions: [
-                "What are the major states affected by wheat blast?",
-                "What are the symptoms of wheat blast on wheat plants?",
-                "Can you provide information on the IPM Package of Practice for managing Wheat Blast Like Disease on wheat?",
-              ],
-              query: "Tell me about wheat blast",
-            },
+            response: response?.data.output,
             loading: false,
           };
         }
@@ -118,15 +93,10 @@ const ChatComponent: React.FC = () => {
             updatedExchanges[updatedExchanges.length - 1] = {
               ...lastExchange,
               response: {
-                youtube_url: "https://www.youtube.com/watch?v=oLc2P7Zrpqc",
-                query_response:
-                  "Wheat blast is a serious fungal disease caused by Magnaporthe oryzae sub.sp. triticum that affects wheat crops. It can lead to significant yield losses ranging from 10 to 100% depending on various factors like genotype, planting time, rainfall, and disease severity. The disease is characterized by completely bleached wheat spikes with gray blast sporulation, lesions with white centers and reddish brown margins on leaves, and can infect all above-ground parts of the plant.",
+                youtube_url: "",
+                query_response: "SOMETHING WENT WRONG",
                 condensed_question: "What can you tell me about wheat blast?",
-                follow_up_questions: [
-                  "What are the major states affected by wheat blast?",
-                  "What are the symptoms of wheat blast on wheat plants?",
-                  "Can you provide information on the IPM Package of Practice for managing Wheat Blast Like Disease on wheat?",
-                ],
+                follow_up_questions: [],
                 query: "Tell me about wheat blast",
               },
               loading: false,
@@ -145,15 +115,15 @@ const ChatComponent: React.FC = () => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
       }
     }, 0);
-
-    setInputText(""); // Clear input field
   }
 
   const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!inputText.trim()) return;
-
-    getResponse(inputText);
+    setInputText(""); // Clear input field
+    setReadyForQuery(false);
+    await getResponse(inputText);
+    setReadyForQuery(true);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,32 +139,28 @@ const ChatComponent: React.FC = () => {
     callLoader("component", true);
     setTimeout(() => {
       callLoader("component", false);
+      setReadyForQuery(true);
     }, 4000);
   }, []);
 
   return (
-    <div className="flex w-screen h-screen">
-      {/* Sidebar for select options */}
-      <div className="flex flex-col p-5 bg-[#212121] dark:bg-[#212121] w-[200px] min-w-[200px] space-y-4">
-        {/* Assuming you have state and handlers for these select elements */}
-        <BotSelection />
-        <Selector />
-        <CropSelector />
-      </div>
-
+    <div className="flex relative flex-col font-reddit w-full">
       {/* Main content area */}
-      <div className="flex flex-col flex-1">
+      {/* <div className="sticky top-0 z-10 bg-[#212121] dark:bg-gray-800 text-white shadow-md py-1 px-6">
+        <h6 className="text-lg font-semibold">Chat</h6>
+      </div> */}
+      <div className="flex h-[640px] flex-col min-w-full m-auto">
         {/* Existing content from your snippet */}
-        <main className="flex-1 pl-5 overflow-y-auto space-y-1 w-full max-w-3xl mr-auto hide-scrollbar bg-[#212121] dark:bg-gray-900">
+        <main className="pr-[15%] pl-0 pt-10 pb-10 h-full m-auto overflow-y-auto space-y-1 w-[100%] mr-auto hide-scrollbar bg-[#212121] dark:bg-gray-900">
           {loader.component ? (
             <ComponentLoader />
-          ) : (
+          ) : chatExchanges.length > 0 ? (
             chatExchanges.map((exchange) => (
               <div key={exchange.id} className="w-full py-2 my-2 text-white">
                 {/* User query */}
                 <div className="text-left">
-                  <div className="inline-block w-full flex gap-5 align-middle dark:bg-gray-800  dark:text-gray-300 rounded-lg px-4 py-2 shadow">
-                    <Avatar>
+                  <div className=" w-full flex gap-5 align-middle dark:bg-gray-800  dark:text-gray-300 rounded-lg px-4 py-2 shadow">
+                    <Avatar className="h-7 w-7">
                       <AvatarImage src={user?.photoURL} />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
@@ -204,8 +170,8 @@ const ChatComponent: React.FC = () => {
                 {/* Bot response */}
                 {exchange.loading ? (
                   <div className="text-left mt-2">
-                    <div className="inline-block w-full flex gap-5 align-middle  dark:bg-gray-700 dark:text-gray-300 rounded-lg px-4 py-2 shadow animate-pulse">
-                      <Avatar>
+                    <div className="w-full flex gap-5 align-middle  dark:bg-gray-700 dark:text-gray-300 rounded-lg px-4 py-2 shadow animate-pulse">
+                      <Avatar className="h-7 w-7">
                         <AvatarImage src="https://github.com/shadcn.png" />
                         <AvatarFallback>FC</AvatarFallback>
                       </Avatar>{" "}
@@ -213,14 +179,6 @@ const ChatComponent: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  // <div className="text-left mt-2">
-                  //   <div className="inline-block w-full flex gap-5 align-middle dark:bg-gray-700 dark:text-gray-300 rounded-lg px-4 py-2 shadow">
-                  //     <Avatar>
-                  //       <AvatarImage src="https://github.com/shadcn.png" />
-                  //       <AvatarFallback>FC</AvatarFallback>
-                  //     </Avatar>
-                  //   </div>
-                  // </div>
                   <>
                     <ResponseFormatter
                       exchange={exchange.response}
@@ -230,31 +188,38 @@ const ChatComponent: React.FC = () => {
                 )}
               </div>
             ))
-          )}{" "}
+          ) : (
+            <AssistComponent />
+          )}
           <div ref={bottomRef} />
-        </main>
-        <div className="p-5 bg-[#212121] dark:bg-[#212121] flex justify-start">
-          <form
-            onSubmit={handleSendMessage}
-            className="flex justify-center space-x-2 w-full max-w-3xl" // Reduced width and centering
-          >
-            <Input
-              className="flex-1 p-2 rounded-xl border text-white bg-[#212121] border-white focus:border-white focus:outline-[#212121] transition-colors"
-              id="message"
-              placeholder="Type a message..."
-              value={inputText}
-              onChange={handleChange}
-            />
 
-            <Button
-              type="submit"
-              className="px-4 py-2 bg-[#212121] hover:bg-[#1a1a1a] border border-white outline-none text-white rounded-full disabled:bg-[#171717] focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
-              disabled={!inputText.trim()}
+          <div className="absolute w-[83.5%] bottom-0 left-0 bg-[#212121] m-auto dark:bg-[#212121] flex justify-start">
+            <form
+              onSubmit={handleSendMessage}
+              className="flex ml-2 justify-start space-x-2 w-full" // Reduced width and centering
             >
-              Send
-            </Button>
-          </form>
-        </div>
+              <div className="flex w-full border rounded-xl border-white p-1">
+                <input
+                  className="main-input focus-visible:ring-0  focus-visible:--tw-ring-offset-width: 2px; flex-1 p-2 border-none text-white focus:border-none focus:ring-0 focus:outline-none bg-[#212121] transition-colors"
+                  id="message"
+                  placeholder="Type a message..."
+                  value={inputText}
+                  onChange={handleChange}
+                  autoComplete="off"
+                  autoFocus={false}
+                />
+
+                <button
+                  type="submit"
+                  className="px-5 py-1 bg-[#212121] hover:bg-[#1a1a1a]  outline-none text-white rounded-full disabled:bg-[#212121] focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                  disabled={!inputText.trim() || !readyForQuery}
+                >
+                  <IoSend />
+                </button>
+              </div>
+            </form>
+          </div>
+        </main>
       </div>
     </div>
   );

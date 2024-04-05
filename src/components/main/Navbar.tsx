@@ -1,25 +1,22 @@
+import { Link } from "react-router-dom";
 import BotSelection from "../chat-components/BotSelection";
+import CropSelector from "../chat-components/CropSelector";
 import MainDialog from "../chat-components/MainDialog";
+import Selector from "../chat-components/Selector";
 
 // import { Button } from "../ui/button";
 
 export default function Navbar() {
   return (
-    <nav className="bg-[#212121] p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center gap-5">
-          <BotSelection />
-          <MainDialog />
+    <nav className="bg-[#212121] w-full fixed overflow-hidden z-10 p-2">
+      <div className="container  mx-auto flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <Selector />
+          <CropSelector />
+          <button>
+            <Link to={"/dashboard"}>Dashboard</Link>
+          </button>
         </div>
-        {/* <MainCard /> */}
-        {/* <div className="space-x-4">
-          <Button className="p-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
-            About
-          </Button> */}
-        {/* <button className="p-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
-            Contact
-          </button> */}
-        {/* </div> */}
       </div>
     </nav>
   );

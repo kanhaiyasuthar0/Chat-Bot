@@ -1,32 +1,75 @@
+import React from "react";
+import axios from "axios"; // Ensure axios is imported if you're using it directly
 import { signInWithGoogle } from "@/configs/firebaseService";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
+import { useAppContext } from "@/context/ChatBotContext";
+import urlConstants from "@/utils/urlConstant";
 
 const GoogleSignIn = () => {
   const navigate = useNavigate();
+  const { setUser, user } = useAppContext(); // Assuming useAppContext provides a setUser method
+
+  // Define createUser as a regular async function, not an arrow function inside a function.
+  const createUser = async (user: any) => {
+    if (!user) {
+      console.error("User details not found");
+      return false;
+    }
+
+    const { email, displayName: username } = user;
+
+    try {
+      const response = await axios.post(
+        `${urlConstants.baseUrl}/ai/user/`,
+        { email, username },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Specify other necessary headers
+          },
+        }
+      );
+
+      console.log("User created:", response.data);
+      localStorage.setItem("userId", response.data.id);
+      // Handle successful user creation, if needed
+      return true;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      // Handle error
+      return false;
+    }
+  };
+
+  const handleSignIn = async () => {
+    try {
+      const firebaseUser = await signInWithGoogle();
+      console.log("🚀 ~ handleSignIn ~ firebaseUser:", firebaseUser);
+      if (firebaseUser) {
+        const createUserResponse = await createUser(firebaseUser);
+        if (createUserResponse) {
+          navigate("/chat");
+        } else {
+          navigate("/");
+        }
+      } else {
+        console.error("No user details returned from Google sign-in");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error signing in with Google", error);
+      navigate("/");
+    }
+  };
 
   return (
-    <div className="flex justify-center items-center h-96 bg-gray-900 dark:bg-gray-900">
+    <div className="flex justify-center items-center h-96 bg-gray-900">
       <Button
-        onClick={async () => {
-          try {
-            await signInWithGoogle();
-            navigate("/chat");
-          } catch (error) {
-            console.error("Error signing in with Google", error);
-            // Optionally handle the error, e.g., show an error message
-          }
-        }}
-        className="inline-flex items-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+        onClick={handleSignIn}
+        className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800 transition-colors text-shadow"
       >
-        <svg
-          className="mr-2 -ml-1 w-6 h-6"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M21.35 11.1h-9.25v3.4h5.3c-.2 1.15-1.3 3.4-5.3 3.4-3.2 0-5.8-2.65-5.8-5.8s2.6-5.8 5.8-5.8c1.8 0 3 0.8 3.7 1.45l2.45-2.45c-1.6-1.5-3.7-2.4-6.15-2.4-5.1 0-9.25 4.15-9.25 9.25s4.15 9.25 9.25 9.25c5.35 0 8.9-3.8 8.9-9.25 0-.65-0.05-1.15-0.15-1.65z" />
-        </svg>
+        {/* SVG icon and text here, considering a light-colored icon for better visibility */}
         Sign in with Google
       </Button>
     </div>

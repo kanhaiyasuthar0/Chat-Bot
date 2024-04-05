@@ -26,7 +26,7 @@ export const signInWithGoogle = async () => {
       });
     }
     console.log("User document written with ID: ", user.uid);
-    return true;
+    return user;
   } catch (error) {
     console.error("Error adding document: ", error);
     return false;
