@@ -17,6 +17,7 @@ interface AppContextType {
   setLanguage: (str: string) => void;
   bot: string;
   setBot: (str: string) => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   user: User | null;
   loader: {
     page: string | boolean;

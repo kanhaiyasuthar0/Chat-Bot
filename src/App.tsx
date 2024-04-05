@@ -9,7 +9,7 @@ import PageLoader from "./components/loaders/PageLoader";
 import { useEffect } from "react";
 // import DashboardMainPage from "./pages/dashboard";
 import LayoutWithSidebar from "./components/Layout/LayoutWithSidebar";
-import Navbar from "./components/main/Navbar";
+// import Navbar from "./components/main/Navbar";
 import ChatComponent from "./components/chat-components/ChatWindow";
 // import PersistentDrawer from "./components/main/CollapsibleSidebar";
 

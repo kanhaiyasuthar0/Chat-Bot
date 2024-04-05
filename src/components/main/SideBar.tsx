@@ -1,9 +1,7 @@
 import { handleSignOut } from "@/configs/firebaseService";
 import { Button } from "../ui/button";
 import { useAppContext } from "@/context/ChatBotContext";
-import BotSelection from "../chat-components/BotSelection";
-import Selector from "../chat-components/Selector";
-import CropSelector from "../chat-components/CropSelector";
+
 import { Link } from "react-router-dom";
 import GptBotSelector from "../chat-components/GptBotSelector";
 

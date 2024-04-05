@@ -55,7 +55,7 @@ const GptBotSelector: React.FC = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const initialBotId = searchParams.get("bot")
-    ? parseInt(searchParams.get("bot"), 10)
+    ? parseInt(searchParams.get("bot")!, 10)
     : bots[0].id;
 
   const [selectedBotId, setSelectedBotId] = useState<number>(initialBotId);
@@ -64,7 +64,7 @@ const GptBotSelector: React.FC = () => {
     label: string;
   } | null>(null);
 
-  const handleChangeState = async (value: any) => {
+  const handleChangeState = async (value: unknown) => {
     console.log("🚀 ~ handleChangeState ~ value:", value);
     return {};
   };

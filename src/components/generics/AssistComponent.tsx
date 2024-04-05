@@ -21,18 +21,18 @@ const AssistComponent: React.FC<AssistComponentProps> = ({
 const styles = {
   container: {
     display: "flex",
-    flexDirection: "column" as "column", // TypeScript requires the 'as' assertion for non-string values
+    flexDirection: "column", // TypeScript requires the 'as' assertion for non-string values
     alignItems: "center",
     justifyContent: "center",
     height: "100%", // Adjust based on your needs
-  },
+  } as React.CSSProperties,
   icon: {
     marginBottom: "10px", // Space between icon and text
-  },
+  } as React.CSSProperties,
   text: {
     fontSize: "16px",
-    textAlign: "center" as "center",
-  },
+    textAlign: "center",
+  } as React.CSSProperties,
 };
 
 export default AssistComponent;

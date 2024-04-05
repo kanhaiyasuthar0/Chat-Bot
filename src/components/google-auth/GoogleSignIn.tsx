@@ -1,17 +1,16 @@
-import React from "react";
 import axios from "axios"; // Ensure axios is imported if you're using it directly
 import { signInWithGoogle } from "@/configs/firebaseService";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { useAppContext } from "@/context/ChatBotContext";
+// import { useAppContext } from "@/context/ChatBotContext";
 import urlConstants from "@/utils/urlConstant";
 
 const GoogleSignIn = () => {
   const navigate = useNavigate();
-  const { setUser, user } = useAppContext(); // Assuming useAppContext provides a setUser method
+  // const { setUser, user } = useAppContext(); // Assuming useAppContext provides a setUser method
 
   // Define createUser as a regular async function, not an arrow function inside a function.
-  const createUser = async (user: any) => {
+  const createUser = async (user: { email: string; displayName: string }) => {
     if (!user) {
       console.error("User details not found");
       return false;
@@ -46,15 +45,20 @@ const GoogleSignIn = () => {
     try {
       const firebaseUser = await signInWithGoogle();
       console.log("🚀 ~ handleSignIn ~ firebaseUser:", firebaseUser);
-      if (firebaseUser) {
-        const createUserResponse = await createUser(firebaseUser);
+      // Ensure firebaseUser, firebaseUser.email, and firebaseUser.displayName are not null
+      if (firebaseUser && firebaseUser.email && firebaseUser.displayName) {
+        // Now TypeScript knows firebaseUser.email and firebaseUser.displayName are strings, not null
+        const { email, displayName } = firebaseUser;
+        const createUserResponse = await createUser({ email, displayName });
         if (createUserResponse) {
           navigate("/chat");
         } else {
           navigate("/");
         }
       } else {
-        console.error("No user details returned from Google sign-in");
+        console.error(
+          "No user details returned from Google sign-in or missing email/displayName"
+        );
         navigate("/");
       }
     } catch (error) {

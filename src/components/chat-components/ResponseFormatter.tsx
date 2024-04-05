@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "../ui/button";
+// import { Button } from "../ui/button";
 import Prepopulate from "./Prepopulate";
 // import { RxClipboardCopy } from "react-icons/rx";
 const ResponseFormatter = ({
@@ -20,7 +20,7 @@ const ResponseFormatter = ({
   console.log("🚀 ~ copyToClipboard:", copyToClipboard);
   console.log(exchange);
 
-  function transformDriveLink(link) {
+  function transformDriveLink(link: string) {
     // Regular expression to check for drive.google.com and replace /view with /preview
     const regex =
       /https?:\/\/drive.google.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/;
@@ -30,7 +30,7 @@ const ResponseFormatter = ({
 
     if (match) {
       // If it matches, transform /view to /preview
-      const fileId = match?.[1];
+      // const fileId = match?.[1];
       const transformedLink = link.replace("/view", "/preview");
       return transformedLink;
     } else {
@@ -39,10 +39,10 @@ const ResponseFormatter = ({
     }
   }
 
-  function extractVideoId(url) {
+  function extractVideoId(url: string) {
     // Match the video ID from the URL using a regular expression
     const regex =
-      /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?feature=player_embedded&v=|watch\?feature=share&v=))([^\?&"'>]+)/;
+      /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?feature=player_embedded&v=|watch\?feature=share&v=))([^?&"'>]+)/;
 
     // Execute the regular expression and get the first capturing group
     const match = url.match(regex);

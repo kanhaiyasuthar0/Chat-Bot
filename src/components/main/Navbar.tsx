@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import BotSelection from "../chat-components/BotSelection";
+
 import CropSelector from "../chat-components/CropSelector";
-import MainDialog from "../chat-components/MainDialog";
+
 import Selector from "../chat-components/Selector";
 
 // import { Button } from "../ui/button";

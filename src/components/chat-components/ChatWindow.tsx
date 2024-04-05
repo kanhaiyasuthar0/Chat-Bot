@@ -1,12 +1,12 @@
 import React, { useState, FormEvent, useEffect, useRef } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+// import { Button } from "../ui/button";
+// import { Input } from "../ui/input";
 import { useAppContext } from "@/context/ChatBotContext";
 import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ResponseFormatter from "./ResponseFormatter";
 import ComponentLoader from "../loaders/ComponentLoader";
-import OutlinedInput from "@mui/material/OutlinedInput";
+// import OutlinedInput from "@mui/material/OutlinedInput";
 import { IoSend } from "react-icons/io5";
 import AssistComponent from "../generics/AssistComponent";
 import urlConstants from "@/utils/urlConstant";
@@ -42,8 +42,16 @@ const ChatComponent: React.FC = () => {
     };
 
     setChatExchanges([...chatExchanges, newExchange]);
-
-    const payload = {
+    // Define the shape of filters with an index signature
+    interface Filters {
+      [key: string]: string | undefined; // This allows any string as a key, and string as a value
+    }
+    const payload: {
+      query: string;
+      email_id: string | null;
+      chain: boolean;
+      filters: Filters;
+    } = {
       query: inputText,
       email_id: localStorage.getItem("userId"),
       chain: true,
